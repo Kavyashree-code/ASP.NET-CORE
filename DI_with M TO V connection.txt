@@ -1,0 +1,73 @@
+DI 1st:creating serves
+
+create new folder-Name:Model
+inside this create-class name:PersonalInfo.cs
+
+public class PersonalInfo
+{
+    public string Name { get; set; }
+    public long PhoneNumber { get; set; }
+}
+--------------------
+inside this create-interface name:IPersonalInfoRepository.cs
+(put declaration method tht acts on the class,PersonalInfo)
+
+public interface IPersonalInfoRepository
+{
+    PersonalInfo GetPersonalInfo();
+}
+----------------------
+create-2ndclass name:PersonalInfoRepository.cs
+
+public class PersonalInfoRepository : IPersonalInfoRepository
+{
+    private PersonalInfo _personalInfo;
+     public PersonalInfoRepository()
+    {
+        _personalInfo = new PersonalInfo()
+
+        {
+            Name = "Kavyashree",
+            PhoneNumber = 9148869788
+        };
+    }
+    public PersonalInfo GetPersonalInfo()
+    {
+        return _personalInfo;
+    }
+}
+
+----------------
+2nd register services in prog.cs
+
+builder.Services.AddTransient<IPersonalInfoRepository, PersonalInfoRepository>();
+---------------------
+3rd inject service dependency(constructor injection, property,method) ,   passdata from view model to view(VideData["string formatkey"] / ViewBag) 
+expand pages folder--index.cshtml inside--index.cshtml.cs
+
+public class IndexModel : PageModel
+{
+    private readonly IPersonalInfoRepository _personalInfo;
+
+    public IndexModel(IPersonalInfoRepository personalInfo)
+    {
+        _personalInfo=personalInfo;
+    }
+
+    public void OnGet()
+    {
+        ViewData["name"]=_personalInfo.GetPersonalInfo().Name;
+        ViewData["phonenumber"] = _personalInfo.GetPersonalInfo().PhoneNumber;
+    }
+}
+-----------------------------------------------------------
+index.cshtml
+
+<h3>Name: @ViewData["name"]</h3>
+<h3>Phone Number: @ViewData["phonenumber"]</h3>
+
+=====================================================================================================================================================================
+
+
+
+
